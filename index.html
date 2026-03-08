@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mates Monday — Austin Neighbourhood Get Together</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Abril+Fatface&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1008;
+    --cream: #f5efe0;
+    --warm: #c8a96e;
+    --rust: #b5451b;
+    --sage: #5c7a5a;
+    --paper: #ede8d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE TEXTURE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ─── HEADER / LOGO ─── */
+  header {
+    padding: 2rem 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(200,169,110,0.2);
+    padding-bottom: 1.5rem;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .logo-text {
+    line-height: 1;
+  }
+
+  .logo-text .title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--warm);
+    letter-spacing: 0.05em;
+  }
+
+  .logo-text .sub {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(245,239,224,0.5);
+  }
+
+  .header-meta {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(245,239,224,0.4);
+    text-align: right;
+  }
+
+  /* ─── HERO: NEXT EVENT ─── */
+  .next-event {
+    position: relative;
+    min-height: 80vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+
+  @media (max-width: 700px) {
+    .next-event { grid-template-columns: 1fr; }
+  }
+
+  .next-event-photo {
+    position: relative;
+    overflow: hidden;
+    min-height: 400px;
+  }
+
+  .next-event-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: sepia(20%) contrast(1.05);
+    transition: transform 8s ease;
+  }
+
+  .next-event-photo:hover img {
+    transform: scale(1.04);
+  }
+
+  .next-event-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, transparent 60%, var(--ink) 100%);
+  }
+
+  .next-event-info {
+    padding: 4rem 3rem 4rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+    position: relative;
+  }
+
+  .next-event-info::before {
+    content: 'NEXT UP';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    color: var(--rust);
+    border-bottom: 1px solid var(--rust);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+    width: fit-content;
+  }
+
+  .venue-name {
+    font-family: 'Abril Fatface', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 0.95;
+    color: var(--cream);
+  }
+
+  .venue-tagline {
+    font-size: 1rem;
+    color: var(--warm);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .event-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .detail-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .detail-row svg {
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  .detail-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(245,239,224,0.4);
+    display: block;
+  }
+
+  .detail-value {
+    font-size: 1rem;
+    color: var(--cream);
+    font-weight: 400;
+  }
+
+  .date-stamp {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--warm);
+    line-height: 1;
+  }
+
+  .rsvp-note {
+    background: rgba(200,169,110,0.08);
+    border-left: 3px solid var(--warm);
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: rgba(245,239,224,0.7);
+    line-height: 1.5;
+    max-width: 360px;
+  }
+
+  .vibe-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--sage);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    width: fit-content;
+  }
+
+  /* ─── SECTION TITLES ─── */
+  .section-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--rust);
+    text-transform: uppercase;
+    padding: 3rem 2rem 0;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Abril Fatface', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    color: var(--warm);
+    padding: 0.5rem 2rem 1.5rem;
+    border-bottom: 1px solid rgba(200,169,110,0.15);
+  }
+
+  /* ─── HISTORY GRID ─── */
+  .history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1px;
+    background: rgba(200,169,110,0.1);
+    margin: 0;
+  }
+
+  .history-card {
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    cursor: pointer;
+  }
+
+  .history-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(30%) contrast(0.9) brightness(0.7);
+    transition: filter 0.4s ease, transform 0.6s ease;
+    display: block;
+  }
+
+  .history-card:hover img {
+    filter: sepia(10%) contrast(1.05) brightness(0.85);
+    transform: scale(1.05);
+  }
+
+  .history-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,16,8,0.95) 0%, rgba(26,16,8,0.2) 60%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.25rem;
+  }
+
+  .history-venue {
+    font-family: 'Abril Fatface', serif;
+    font-size: 1.4rem;
+    color: var(--cream);
+    line-height: 1;
+  }
+
+  .history-date {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--warm);
+    margin-top: 0.3rem;
+  }
+
+  .history-count {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: rgba(245,239,224,0.5);
+  }
+
+  .history-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--rust);
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* ─── PLACEHOLDERS ─── */
+  .hero-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    background: linear-gradient(135deg, #2a1f12 0%, #1a1008 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    text-align: center;
+    padding: 2rem;
+  }
+  .hero-placeholder span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    color: rgba(200,169,110,0.5);
+  }
+  .hero-placeholder small {
+    font-size: 0.75rem;
+    color: rgba(245,239,224,0.25);
+    font-family: monospace;
+  }
+  .hero-placeholder code {
+    background: rgba(200,169,110,0.1);
+    padding: 0.1em 0.4em;
+    border-radius: 2px;
+    color: var(--warm);
+  }
+
+  .history-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #221810 0%, #1a1008 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-align: center;
+    padding: 1rem;
+  }
+  .history-placeholder span {
+    font-size: 0.65rem;
+    font-family: monospace;
+    color: rgba(200,169,110,0.35);
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── ABOUT STRIP ─── */
+  .about-strip {
+    padding: 4rem 2rem;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .about-strip p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(245,239,224,0.65);
+  }
+
+  .about-strip strong {
+    color: var(--warm);
+    font-weight: 700;
+  }
+
+  /* ─── DIVIDER ─── */
+  .ornament {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(200,169,110,0.3);
+    font-size: 1.2rem;
+    letter-spacing: 1rem;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid rgba(200,169,110,0.1);
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: rgba(245,239,224,0.25);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  /* ─── ANIMATE IN ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .next-event-info > * {
+    animation: fadeUp 0.6s ease both;
+  }
+  .next-event-info > *:nth-child(1) { animation-delay: 0.1s; }
+  .next-event-info > *:nth-child(2) { animation-delay: 0.2s; }
+  .next-event-info > *:nth-child(3) { animation-delay: 0.3s; }
+  .next-event-info > *:nth-child(4) { animation-delay: 0.4s; }
+  .next-event-info > *:nth-child(5) { animation-delay: 0.5s; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     HEADER / LOGO
+     ══════════════════════════════════════════ -->
+<header>
+  <a href="#" class="logo">
+    <!-- SVG Logo: two pints + map pin feel -->
+    <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Left pint -->
+      <path d="M9 11 L11.5 37 L19.5 37 L22 11 Z" stroke="#c8a96e" stroke-width="1.4" stroke-linejoin="round" fill="rgba(200,169,110,0.08)"/>
+      <path d="M22 15 C26 15 28 17.5 28 21 C28 24.5 26 27 22 27" stroke="#c8a96e" stroke-width="1.4" fill="none"/>
+      <!-- Right pint -->
+      <path d="M26 11 L28.5 37 L36.5 37 L39 11 Z" stroke="#c8a96e" stroke-width="1.4" stroke-linejoin="round" fill="rgba(200,169,110,0.08)"/>
+      <!-- foam bubbles left -->
+      <circle cx="14" cy="12.5" r="1.2" fill="#c8a96e" opacity="0.7"/>
+      <circle cx="16.5" cy="11.5" r="1" fill="#c8a96e" opacity="0.5"/>
+      <circle cx="19" cy="12.5" r="1.2" fill="#c8a96e" opacity="0.7"/>
+      <!-- foam bubbles right -->
+      <circle cx="30" cy="12.5" r="1.2" fill="#c8a96e" opacity="0.7"/>
+      <circle cx="32.5" cy="11.5" r="1" fill="#c8a96e" opacity="0.5"/>
+      <circle cx="35" cy="12.5" r="1.2" fill="#c8a96e" opacity="0.7"/>
+      <!-- beer fill wash -->
+      <path d="M9.8 20 L11.5 37 L19.5 37 L21.2 20 Z" fill="rgba(200,169,110,0.12)"/>
+      <path d="M26.8 20 L28.5 37 L36.5 37 L38.2 20 Z" fill="rgba(200,169,110,0.12)"/>
+    </svg>
+    <div class="logo-text">
+      <div class="title">Mates Monday</div>
+      <div class="sub">Austin Neighbourhood Get Together</div>
+    </div>
+  </a>
+  <div class="header-meta">
+    Austin, TX &nbsp;·&nbsp; Est. 2025<br>
+    Biweekly · New spot every fortnight
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════
+     ★ EDIT THIS SECTION EACH FORTNIGHT ★
+     NEXT EVENT
+     ══════════════════════════════════════════ -->
+<section class="next-event">
+  <div class="next-event-photo">
+    <!--
+      SWAP THIS IMAGE SRC each fortnight.
+      Use a direct photo URL or a local file path.
+      Ideal: wide landscape shot of the venue exterior or interior.
+    -->
+    <img src="images/venue-01.jpg" alt="High Road DelicaTexan, 915 W Mary St Austin">
+  </div>
+
+  <div class="next-event-info">
+
+    <span class="vibe-tag">
+      <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="white" opacity="0.8"/></svg>
+      <!-- ★ EDIT: change vibe tag e.g. "Breakfast spot" / "Rooftop bar" / "Dive bar" -->
+      Deli · Bar · Game Room
+    </span>
+
+    <!-- ★ EDIT: Venue name -->
+    <div class="venue-name">High Road DelicaTexan</div>
+
+    <!-- ★ EDIT: One-liner about the place -->
+    <div class="venue-tagline">Sandwiches, sausages, craft cocktails &amp; skee-ball. Bouldin Creek&#39;s newest obsession.</div>
+
+    <div class="event-details">
+      <div>
+        <!-- ★ EDIT: Date -->
+        <span class="date-stamp">MON 3 FEB</span>
+        <span class="detail-label">6:30 pm · arrive whenever</span>
+      </div>
+      <div class="detail-row">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1C4.79 1 3 2.79 3 5c0 3.31 4 8 4 8s4-4.69 4-8c0-2.21-1.79-4-4-4zm0 5.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" fill="#c8a96e"/></svg>
+        <!-- ★ EDIT: Address -->
+        <div><span class="detail-label">Where</span><span class="detail-value">915 W Mary St, Austin</span></div>
+      </div>
+    </div>
+
+    <div class="rsvp-note">
+      No RSVP needed — just show up. Usually 5–6 of us, sometimes more. New faces always welcome.
+    </div>
+
+  </div>
+</section>
+
+
+<!-- About blurb -->
+<div class="about-strip">
+  <p>
+    <strong>Mates Monday</strong> is a low-key, biweekly excuse to get out of the house and try somewhere new.
+    Different spot every fortnight. No agenda. No group chat drama. Just good spots and good people.
+    Blokes are notoriously bad at this sort of thing — consider this the nudge.
+  </p>
+</div>
+
+<div class="ornament">· · ·</div>
+
+
+<!-- ══════════════════════════════════════════
+     HISTORY
+     Add new cards here as events pass.
+     Move the current event info down into this section each fortnight.
+     ══════════════════════════════════════════ -->
+<span class="section-label">The Archive</span>
+<div class="section-title">Where We've Been</div>
+
+<div class="history-grid" id="history-grid">
+
+  <div class="history-card">
+    <img src="images/venue-02.jpg" alt="Meanwhile Brewing Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">Meanwhile Brewing</div>
+      <div class="history-date"></div>
+      <div class="history-count">3.7 acres · beer garden · live music</div>
+    </div>
+  </div>
+  <div class="history-card">
+    <img src="images/venue-03.jpg" alt="St Elmo Brewing Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">St. Elmo Brewing</div>
+      <div class="history-date"></div>
+      <div class="history-count">South Austin neighbourhood brewery</div>
+    </div>
+  </div>
+  <div class="history-card">
+    <img src="images/venue-04.jpg" alt="Yeti Flagship Bar South Congress Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">Yeti Bar</div>
+      <div class="history-date"></div>
+      <div class="history-count">South Congress · patio bar · proper Austin</div>
+    </div>
+  </div>
+  <div class="history-card">
+    <img src="images/venue-05.jpg" alt="Koko's Bavarian South Lamar Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">Koko's Bavarian</div>
+      <div class="history-date"></div>
+      <div class="history-count">South Lamar · steins · pretzels · live oaks</div>
+    </div>
+  </div>
+  <div class="history-card">
+    <img src="images/venue-06.jpg" alt="Deep Eddy Cabaret Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">Deep Eddy Cabaret</div>
+      <div class="history-date"></div>
+      <div class="history-count">Oldest bar in Austin · cold beer · no fuss</div>
+    </div>
+  </div>
+  <div class="history-card">
+    <img src="images/venue-07.jpg" alt="Hold Out Brewing Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">Hold Out Brewing</div>
+      <div class="history-date"></div>
+      <div class="history-count">West Austin · craft beer · sprawling patio</div>
+    </div>
+  </div>
+  <div class="history-card">
+    <img src="images/venue-08.jpg" alt="Mean Eyed Cat Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">Mean Eyed Cat</div>
+      <div class="history-date"></div>
+      <div class="history-count">Johnny Cash bar · Lamar · proper dive</div>
+    </div>
+  </div>
+  <div class="history-card">
+    <img src="images/venue-09.jpg" alt="Radio Coffee &amp; Beer neon sign Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">Radio Coffee &amp; Beer</div>
+      <div class="history-date"></div>
+      <div class="history-count">Manchaca Rd · neon sign · cold ones</div>
+    </div>
+  </div>
+
+  <!-- ★ MOST RECENT PAST EVENT (copy this block each fortnight) -->
+  <div class="history-card">
+    <img src="images/venue-10.jpg" alt="Henry's at Green Pastures bar">
+    <div class="history-card-overlay">
+      <div class="history-venue">Henry's at Green Pastures</div>
+      <div class="history-date">Mon 20 Jan 2025</div>
+      <div class="history-count">6 turned up · vinyl, neon &amp; checker floors</div>
+    </div>
+    <div class="history-badge">Latest</div>
+  </div>
+
+  <!-- ★ OLDER EVENTS — add more blocks like the one above -->
+  <div class="history-card">
+    <img src="images/venue-11.jpg" alt="Corner Bar Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">Corner Bar</div>
+      <div class="history-date"></div>
+      <div class="history-count">S Lamar · classic Austin dive</div>
+    </div>
+  </div>
+
+  <div class="history-card">
+    <img src="images/venue-12.jpg" alt="Pizzeria Grata Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">Pizzeria Grata</div>
+      <div class="history-date"></div>
+      <div class="history-count">Tin roof · fairy lights · fresh pies</div>
+    </div>
+  </div>
+
+  <div class="history-card">
+    <img src="images/venue-13.jpg" alt="Fortune Teller Bar Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">Fortune Teller Bar</div>
+      <div class="history-date"></div>
+      <div class="history-count">Past · Present · Future · all neon</div>
+    </div>
+  </div>
+
+  <div class="history-card">
+    <img src="images/venue-14.jpg" alt="Gypsy Picnic Trailer Food Festival Austin">
+    <div class="history-card-overlay">
+      <div class="history-venue">Sign Bar</div>
+      <div class="history-date"></div>
+      <div class="history-count">Vintage signs · neon sunset · proper Austin</div>
+    </div>
+  </div>
+
+</div>
+<!-- END HISTORY -->
+
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <span>Mates Monday · Austin, TX</span>
+  <span>A new spot every fortnight. Same good blokes.</span>
+</footer>
+
+</body>
+</html>
